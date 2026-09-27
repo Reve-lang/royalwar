@@ -1,0 +1,621 @@
+:root{
+  --bg:#10141a;
+  --bg-2:#0b0e13;
+  --panel:#171d26;
+  --panel-2:#1e2530;
+  --panel-3:#242c39;
+  --border:#2a323f;
+  --gold:#c9a227;
+  --gold-soft:#e0c56a;
+  --red:#a33636;
+  --red-soft:#c9504f;
+  --green:#4f7f5a;
+  --green-soft:#8fbf9a;
+  --text:#ece7da;
+  --text-dim:#95a0b0;
+  --text-faint:#5c6473;
+  --radius:3px;
+  --nav-h:66px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);color:var(--text);}
+
+/* ✅ اضافه ۱: پس‌زمینه طلایی matrix */
+body{
+  font-family:'Vazirmatn',system-ui,sans-serif;
+  font-weight:400;
+  line-height:1.65;
+  min-height:100vh;
+  background-color: var(--bg);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 20px,
+      rgba(201,162,39,0.04) 20px,
+      rgba(201,162,39,0.04) 21px,
+      transparent 21px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0,
+      transparent 20px,
+      rgba(201,162,39,0.03) 20px,
+      rgba(201,162,39,0.03) 21px,
+      transparent 21px,
+      transparent 40px
+    );
+  pointer-events: none;
+  z-index: 0;
+  animation: slideBackground 60s linear infinite;
+}
+
+@keyframes slideBackground {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg,
+      rgba(201,162,39,0.025) 0px,
+      rgba(201,162,39,0.025) 1px,
+      transparent 1px,
+      transparent 64px
+    ),
+    repeating-linear-gradient(90deg,
+      rgba(201,162,39,0.025) 0px,
+      rgba(201,162,39,0.025) 1px,
+      transparent 1px,
+      transparent 64px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app{max-width:560px;margin:0 auto;min-height:100vh;position:relative;box-shadow:0 0 80px rgba(0,0,0,.6);padding-bottom:var(--nav-h);}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:20;
+}
+.topbar .brand{display:flex;align-items:center;gap:10px;}
+.topbar .brand .logo{
+  width:34px;height:34px;border:1px solid var(--gold);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold-soft);
+}
+.topbar .brand b{font-size:14px;font-weight:700;letter-spacing:.02em;}
+.topbar .brand small{display:block;font-size:9.5px;color:var(--text-faint);letter-spacing:.06em;}
+.bell{
+  all:unset;cursor:pointer;position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:50%;font-size:15px;
+}
+.bell .dot{position:absolute;top:5px;left:7px;width:8px;height:8px;border-radius:50%;background:var(--red-soft);border:1.5px solid var(--panel);}
+
+/* ---------- Screens ---------- */
+.screen{display:none;padding:16px 16px 30px;}
+.screen.active{display:block;animation:rise .25s ease;}
+@keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.screen-title{font-size:17px;font-weight:700;margin-bottom:3px;}
+.screen-sub{font-size:11.5px;color:var(--text-faint);margin-bottom:14px;}
+
+/* ---------- Bottom nav ---------- */
+.bottomnav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;
+  display:grid;grid-template-columns:repeat(5,1fr);background:var(--panel);border-top:1px solid var(--border);
+  height:var(--nav-h);z-index:30;
+}
+.bottomnav button{
+  all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  font-size:10.5px;color:var(--text-dim);position:relative;
+}
+.bottomnav button .ic{font-size:18px;}
+.bottomnav button.active{color:var(--gold-soft);}
+.bottomnav button.active::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:26px;height:2px;background:var(--gold);
+}
+
+/* ---------- Cards & generic components ---------- */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;margin-bottom:9px;}
+.card-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.card h3{font-size:13.5px;font-weight:600;}
+.card .desc{font-size:11.5px;color:var(--text-dim);margin-top:3px;}
+
+.tag{font-size:10px;padding:2px 9px;border:1px solid var(--border);color:var(--text-dim);border-radius:20px;white-space:nowrap;}
+.tag.gold{color:var(--gold-soft);border-color:rgba(201,162,39,0.4);}
+.tag.red{color:var(--red-soft);border-color:rgba(201,80,79,0.4);}
+.tag.green{color:var(--green-soft);border-color:rgba(79,127,90,0.5);}
+
+.bar-track{height:5px;background:#0e1319;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-top:8px;}
+.bar-fill{height:100%;border-radius:20px;}
+
+.btn{
+  all:unset;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;padding:9px 16px;border-radius:var(--radius);
+  text-align:center;border:1px solid var(--gold);color:var(--gold-soft);letter-spacing:.02em;transition:background .15s;display:inline-block;
+}
+.btn:hover{background:rgba(201,162,39,0.12);}
+.btn.solid{background:var(--gold);color:#181207;border-color:var(--gold);}
+.btn.solid:hover{background:var(--gold-soft);}
+.btn.danger{border-color:var(--red-soft);color:var(--red-soft);}
+.btn.danger:hover{background:rgba(201,80,79,0.12);}
+.btn.block{display:block;width:100%;}
+.btn.sm{padding:6px 11px;font-size:11px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+
+/* ---------- Country info card (home) ---------- */
+.country-card{padding:0;overflow:hidden;}
+.country-head{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--border);background:var(--panel-2);}
+.country-head .flag{font-size:30px;}
+.country-head b{font-size:15px;display:block;}
+.country-head span{font-size:11px;color:var(--text-dim);}
+.stat-list{padding:6px 14px 10px;}
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.stat-row:last-child{border-bottom:none;}
+.stat-row .lbl{color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+.stat-row .val{color:var(--gold-soft);font-weight:800;font-size:13.5px;}
+
+/* ---------- Internal tabs (market/attack/diplomacy/leaderboard) ---------- */
+.subtabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px;}
+.subtabs button{
+  all:unset;cursor:pointer;white-space:nowrap;font-size:11.5px;padding:8px 14px;border:1px solid var(--border);
+  border-radius:20px;color:var(--text-dim);
+}
+.subtabs button.active{border-color:var(--gold);color:var(--gold-soft);background:rgba(201,162,39,0.08);}
+.subview{display:none;}
+.subview.active{display:block;}
+
+/* ---------- Accordion (weapons market) ---------- */
+.accordion-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;background:var(--panel);}
+.accordion-head{
+  all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;font-size:13px;font-weight:600;
+}
+.accordion-head .ic{font-size:16px;}
+.accordion-head .name{flex:1;}
+.accordion-head .chev{color:var(--text-faint);transition:transform .2s;font-size:11px;}
+.accordion-item.open .accordion-head .chev{transform:rotate(180deg);color:var(--gold-soft);}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .25s ease;background:var(--panel-2);}
+.accordion-item.open .accordion-body{max-height:500px;}
+.item-row{
+  display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-top:1px solid var(--border);cursor:pointer;
+}
+.item-row:hover{background:var(--panel-3);}
+.item-row .iname{font-size:12.5px;}
+.item-row .iprice{font-size:12px;color:var(--gold-soft);font-weight:700;display:flex;align-items:center;gap:8px;}
+.item-row .plus{color:var(--text-faint);font-size:15px;}
+
+/* ---------- Floating cart button ---------- */
+.cart-fab{
+  position:fixed;bottom:calc(var(--nav-h) + 14px);left:50%;transform:translateX(calc(-50% + 210px));
+  background:var(--gold);color:#181207;border:none;border-radius:24px;padding:11px 18px;font-size:12px;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4);z-index:25;display:flex;align-items:center;gap:6px;
+}
+.cart-fab.hidden{display:none;}
+
+/* ---------- Modal (item purchase) ---------- */
+.overlay{position:fixed;inset:0;background:rgba(6,8,11,0.72);display:flex;align-items:flex-end;justify-content:center;z-index:50;}
+.overlay.hidden{display:none;}
+.modal{
+  width:100%;max-width:560px;background:var(--panel);border-top:1px solid var(--gold);border-radius:14px 14px 0 0;
+  padding:18px 18px 22px;animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.modal-head h3{font-size:15px;font-weight:700;}
+.modal-close{all:unset;cursor:pointer;color:var(--text-faint);font-size:16px;padding:4px;}
+.modal .price-line{font-size:12px;color:var(--text-dim);margin-bottom:14px;}
+.qty-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:7px;}
+.qty-grid.small{grid-template-columns:repeat(2,1fr);max-width:160px;}
+.qtybtn{all:unset;cursor:pointer;text-align:center;padding:9px 0;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text-dim);}
+.qtybtn.plus{border-color:rgba(79,127,90,0.5);color:var(--green-soft);}
+.qtybtn.minus{border-color:rgba(201,80,79,0.4);color:var(--red-soft);}
+.qtybtn:active{transform:scale(.96);}
+.custom-qty{display:flex;align-items:center;gap:8px;margin:12px 0;}
+.custom-qty input{
+  flex:1;background:var(--bg-2);border:1px solid var(--border);color:var(--text);padding:9px 10px;border-radius:var(--radius);
+  font-family:inherit;font-size:12.5px;text-align:center;
+}
+.modal-summary{background:var(--panel-2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin:12px 0;font-size:12px;}
+.modal-summary .row{display:flex;justify-content:space-between;padding:3px 0;}
+.modal-summary .row.total b{color:var(--gold-soft);font-size:14px;}
+.pulse{animation:pulse .3s ease;}
+@keyframes pulse{0%{color:var(--gold-soft);}100%{color:inherit;}}
+
+/* ---------- Cart drawer ---------- */
+.drawer{position:fixed;inset:0;background:rgba(6,8,11,0.72);z-index:50;display:flex;justify-content:flex-end;}
+.drawer.hidden{display:none;}
+.drawer-panel{width:100%;max-width:400px;height:100%;background:var(--panel);padding:16px;overflow-y:auto;animation:slideIn .2s ease;}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.cart-line{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.cart-line .del{all:unset;cursor:pointer;color:var(--red-soft);font-size:14px;padding:4px;}
+.cart-empty{text-align:center;color:var(--text-faint);font-size:12px;padding:30px 0;}
+
+/* ---------- Coin plans ---------- */
+.plan{border:1px solid var(--border);background:var(--panel);padding:14px;text-align:center;position:relative;border-radius:var(--radius);cursor:pointer;}
+.plan:hover{border-color:var(--gold);}
+.plan.feat{border-color:var(--gold);}
+.plan .badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--gold);color:#181207;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.plan .name{font-size:13px;font-weight:700;}
+.plan .coins{font-size:15px;color:var(--gold-soft);font-weight:800;margin:6px 0 2px;}
+.plan .price{font-size:10.5px;color:var(--text-dim);}
+
+.pay-box{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.pay-row{display:flex;justify-content:space-between;font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--border);}
+.pay-row:last-of-type{border-bottom:none;}
+.copy-btn{all:unset;cursor:pointer;color:var(--gold-soft);font-size:10.5px;border:1px solid rgba(201,162,39,0.4);padding:2px 8px;border-radius:12px;}
+.upload-box{
+  border:1.5px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;margin:14px 0;cursor:pointer;
+}
+.upload-box:hover{border-color:var(--gold);}
+.upload-box .prev{max-width:100%;max-height:120px;border-radius:var(--radius);margin-top:10px;}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-dim);margin-top:10px;}
+
+/* ---------- Attack ---------- */
+.target-card .target{display:flex;align-items:center;gap:11px;}
+.target-card .flag{font-size:22px;}
+.target-card .info{flex:1;min-width:0;}
+.target-card .info b{font-size:13px;}
+.target-card .info small{display:block;font-size:10.5px;color:var(--text-faint);margin-top:2px;}
+.target-card.selected{border-color:var(--gold);}
+
+.attack-type-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px;}
+.attack-type-grid button{
+  all:unset;cursor:pointer;font-size:12px;padding:9px 14px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);
+}
+.attack-type-grid button.active{border-color:var(--red-soft);color:var(--red-soft);background:rgba(163,54,54,0.1);}
+
+.slider-wrap{margin:10px 0 16px;}
+.slider-wrap input[type=range]{width:100%;accent-color:var(--gold);}
+.slider-val{text-align:center;font-size:16px;font-weight:800;color:var(--gold-soft);margin-top:4px;}
+
+/* ---------- Ranking table ---------- */
+table.rank{width:100%;border-collapse:collapse;font-size:12px;}
+table.rank th{text-align:right;font-size:10.5px;color:var(--text-faint);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--border);}
+table.rank td{padding:10px 4px;border-bottom:1px solid var(--border);}
+table.rank tr:last-child td{border-bottom:none;}
+table.rank tr.me td{background:rgba(201,162,39,0.08);}
+table.rank .pos{width:26px;color:var(--gold-soft);font-weight:700;}
+table.rank .nm{display:flex;align-items:center;gap:7px;}
+
+/* ---------- Notifications ---------- */
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);}
+.notif-item:last-child{border-bottom:none;}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none;margin-top:6px;}
+.notif-item.read .notif-dot{background:transparent;border:1px solid var(--text-faint);}
+.notif-item .txt b{display:block;font-size:12.5px;font-weight:600;}
+.notif-item .txt small{font-size:10.5px;color:var(--text-faint);}
+
+/* ---------- Gauge (oil) ---------- */
+.gauge{display:flex;align-items:center;gap:12px;}
+.gauge .ring{position:relative;width:56px;height:56px;flex:none;border-radius:50%;background:conic-gradient(var(--gold) var(--pct,60%), #232b36 0);}
+.gauge .ring::after{content:attr(data-v);position:absolute;inset:5px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-soft);}
+
+.avatars{display:flex;}
+.avatars span{width:24px;height:24px;border-radius:50%;background:var(--panel-3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;margin-left:-6px;}
+
+.form-field{margin-bottom:12px;}
+.form-field label{display:block;font-size:11.5px;color:var(--text-dim);margin-bottom:6px;}
+.form-field input, .form-field select, .form-field textarea{
+  width:100%;background:var(--bg-2);border:1px solid var(--border);color:var(--text);padding:10px 11px;border-radius:var(--radius);
+  font-family:inherit;font-size:12.5px;
+}
+.form-field textarea{min-height:100px;resize:vertical;}
+.char-count{font-size:10px;color:var(--text-faint);text-align:left;margin-top:4px;}
+
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 16px);left:50%;transform:translateX(-50%);background:var(--panel-3);
+  border:1px solid var(--gold);color:var(--gold-soft);padding:10px 18px;border-radius:20px;font-size:12px;z-index:60;
+  opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+
+footer.note{padding:14px 4px 4px;text-align:center;font-size:10px;color:var(--text-faint);}
+
+/* ==================== اضافات ROYAL WAR — لاگین/ساخت‌کشور/بقیه ==================== */
+
+.hidden{display:none !important;}
+#screen-login,
+#screen-create-country {
+  display: none;
+}
+
+/* ---------- لاگین ---------- */
+.login-screen{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;text-align:center;
+}
+.login-logo{width:84px;height:84px;object-fit:contain;margin-bottom:10px;}
+.login-brand{font-size:22px;font-weight:800;letter-spacing:.03em;color:var(--gold-soft);margin-bottom:36px;}
+.login-box{width:100%;max-width:340px;}
+.login-input{
+  width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);
+  padding:13px 14px;border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:12px;text-align:center;
+  outline:none;
+}
+.login-input:focus{border-color:var(--gold);}
+.login-input.shake{animation:shakeX .35s;border-color:var(--red-soft);}
+@keyframes shakeX{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-7px);}
+  40%{transform:translateX(7px);}
+  60%{transform:translateX(-5px);}
+  80%{transform:translateX(5px);}
+}
+.login-btn{
+  width:100%;background:var(--gold);color:#181207;border:none;border-radius:8px;
+  height:45px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;margin-bottom:22px;
+}
+.login-btn:hover{background:var(--gold-soft);}
+.login-btn:disabled{opacity:.5;cursor:not-allowed;}
+.login-divider{border-top:1px solid var(--border);margin:6px 0 20px;}
+.login-help{font-size:12px;color:var(--text-dim);line-height:2;}
+.login-help .cmd{display:block;font-size:19px;color:var(--gold-soft);font-weight:800;margin:10px 0;letter-spacing:.03em;}
+.login-error{color:var(--red-soft);font-size:11.5px;margin-top:-4px;margin-bottom:12px;min-height:14px;}
+
+/* ---------- ساخت کشور ---------- */
+.country-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.country-pick{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px 4px;text-align:center;cursor:pointer;position:relative;
+}
+.country-pick .flag{font-size:22px;display:block;margin-bottom:4px;}
+.country-pick .nm{font-size:10.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.country-pick.taken{opacity:.35;cursor:not-allowed;}
+.country-pick.avail{border-color:rgba(201,162,39,0.35);}
+.country-pick .badges{position:absolute;top:3px;left:3px;font-size:9px;display:flex;gap:2px;}
+.country-legend{display:flex;gap:14px;font-size:10.5px;color:var(--text-dim);margin:12px 0 4px;flex-wrap:wrap;}
+.country-search{margin-bottom:10px;}
+
+/* ---------- لودینگ ---------- */
+.spinner{
+  width:26px;height:26px;border-radius:50%;border:3px solid rgba(201,162,39,0.25);
+  border-top-color:var(--gold);animation:spin .7s linear infinite;margin:26px auto;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;padding:20px;color:var(--text-faint);font-size:12px;}
+.empty-state{text-align:center;color:var(--text-faint);font-size:12px;padding:26px 6px;}
+
+/* ---------- کارت‌های لیستی عمومی (اتحاد/صادرات/شرکت) ---------- */
+.list-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:9px;}
+.list-card .head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.list-card .head b{font-size:13px;}
+.list-card .sub{font-size:11px;color:var(--text-dim);margin-top:3px;}
+.list-card .actions{display:flex;gap:8px;margin-top:10px;}
+.list-card .actions .btn{flex:1;}
+
+/* ---------- پاپ‌آپ وسط صفحه (تایید/نتیجه) ---------- */
+.overlay.center{align-items:center;}
+.center-modal{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  width:100%;max-width:340px;padding:18px;text-align:center;
+}
+.center-modal h3{font-size:15px;margin-bottom:10px;}
+.center-modal .row{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--border);}
+.center-modal .row:last-of-type{border-bottom:none;}
+.center-modal .row b{color:var(--gold-soft);}
+.center-modal .btnrow{display:flex;gap:8px;margin-top:16px;}
+.center-modal .btnrow .btn{flex:1;}
+.center-modal.conquer{background:linear-gradient(var(--panel),var(--panel)),radial-gradient(circle at 50% 0%,rgba(201,162,39,.25),transparent 70%);}
+.center-modal.annihilate{background:linear-gradient(var(--panel),var(--panel)),radial-gradient(circle at 50% 0%,rgba(163,54,54,.3),transparent 70%);}
+.result-icon{font-size:40px;margin-bottom:6px;}
+
+/* ---------- برچسب اخطار/محافظت ---------- */
+.warn-row .val{color:var(--red-soft) !important;}
+.protect-pill{background:rgba(79,127,90,0.12);border-color:rgba(79,127,90,0.4);color:var(--green-soft);}
+
+/* ---------- اسکرول‌بار موبایل ---------- */
+::-webkit-scrollbar{width:0;height:0;}
+
+/* ✅ اضافه ۲: استایل دکمه حذف (مربعی طلایی) */
+.del-btn {
+  all: unset;
+  cursor: pointer;
+  background: var(--gold);
+  color: #181207;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 4px;
+  min-width: 50px;
+  text-align: center;
+}
+.del-btn:hover {
+  background: var(--gold-soft);
+}
+
+/* ✅ اضافه ۳: استایل انتخاب کشور (افکت نارنجی طلایی) */
+.target-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.target-card.selected {
+  border-color: var(--gold) !important;
+  background: rgba(201,162,39,0.15) !important;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(201,162,39,0.25);
+}
+.target-card:active {
+  transform: scale(0.98);
+}
+
+
+/* ✅ FIX واقعی: جلوگیری از سرریز افقی دکمه‌ها و عناصر */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#app {
+  overflow-x: hidden;
+}
+
+/* 🎯 فیکس اصلی: box-sizing درست برای .btn */
+.btn {
+  box-sizing: border-box;
+}
+.btn.block {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 🎯 فیکس: همه‌ی کارت‌ها و لیست‌ها */
+.card,
+.list-card,
+.screen,
+.center-modal,
+.modal,
+.drawer-panel,
+.country-card {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* 🎯 فیکس: تب‌های زیربخش - اسکرول افقی نرم بدون سرریز */
+.subtabs {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+}
+.subtabs::-webkit-scrollbar { display: none; }
+
+/* 🎯 فیکس: دکمه‌های پاپ‌آپ و لیست‌ها */
+.center-modal .btnrow .btn,
+.list-card .actions .btn,
+#allianceContent .btn {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+
+
+
+
+
+/* ✅ پس‌زمینه‌ی خطوط شطرنجی طلایی — روی کل صفحه‌ی بازی */
+
+/* لایه‌ی خطوط طلایی روی کل #app */
+#app::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0b0e13;
+  background-image:
+    /* خطوط کج به سمت راست \ */
+    repeating-linear-gradient(
+      115deg,
+      transparent 0,
+      transparent 38px,
+      rgba(230, 180, 30, 0.35) 38px,
+      rgba(230, 180, 30, 0.35) 39px,
+      transparent 39px,
+      transparent 78px
+    ),
+    /* خطوط کج به سمت چپ / */
+    repeating-linear-gradient(
+      65deg,
+      transparent 0,
+      transparent 38px,
+      rgba(230, 180, 30, 0.25) 38px,
+      rgba(230, 180, 30, 0.25) 39px,
+      transparent 39px,
+      transparent 78px
+    );
+  pointer-events: none;
+  z-index: -1;
+  animation: slideBackground 60s linear infinite;
+}
+
+/* اطمینان از اینکه #app پس‌زمینه‌ی مات نداشته باشه */
+#app {
+  background: transparent !important;
+  overflow-x: hidden;
+}
+
+/* محتوای داخل #app بالای خطوط قرار بگیره */
+#app > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 🎯 پنل‌ها — همون شفافیت قبلی که خوب بود */
+.card,
+.list-card,
+.country-card,
+.accordion-item {
+  background: rgba(23, 29, 38, 0.88) !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.topbar {
+  background: rgba(23, 29, 38, 0.94) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.bottomnav {
+  background: rgba(23, 29, 38, 0.96) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* صفحه‌های لاگین و ساخت کشور هم خطوط داشته باشن */
+#screen-login::before,
+#screen-create-country::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      transparent 0,
+      transparent 38px,
+      rgba(230, 180, 30, 0.35) 38px,
+      rgba(230, 180, 30, 0.35) 39px,
+      transparent 39px,
+      transparent 78px
+    ),
+    repeating-linear-gradient(
+      65deg,
+      transparent 0,
+      transparent 38px,
+      rgba(230, 180, 30, 0.25) 38px,
+      rgba(230, 180, 30, 0.25) 39px,
+      transparent 39px,
+      transparent 78px
+    );
+  pointer-events: none;
+  z-index: -1;
+}

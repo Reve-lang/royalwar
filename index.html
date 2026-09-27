@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ROYAL WAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ LOGIN ============ -->
+  <section class="screen login-screen" id="screen-login">
+    <img src="logo.png" class="login-logo" alt="ROYAL WAR" onerror="this.style.display='none'">
+    <div class="login-brand">⚔️ ROYAL WAR</div>
+    <div class="login-box">
+      <input class="login-input" id="tokenInput" placeholder="توکن خود را وارد کنید" autocomplete="off" spellcheck="false">
+      <div class="login-error" id="loginError"></div>
+      <button class="login-btn" id="loginBtn">ورود</button>
+      <div class="login-divider"></div>
+      <div class="login-help">
+        راهنما:<br>برای لاگین اول به داخل ربات بروید<br>بعد دستور زیر را وارد کنید
+        <span class="cmd">/token</span>
+        سپس توکن را در کادر بالا وارد کنید
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CREATE COUNTRY ============ -->
+  <section class="screen" id="screen-create-country">
+    <div class="screen-title">🌍 انتخاب کشور</div>
+    <div class="screen-sub">یک کشور آزاد برای شروع انتخاب کن</div>
+    <input class="login-input country-search" id="countrySearch" placeholder="جستجوی کشور...">
+    <div class="country-legend">
+      <span>🟢 آزاد</span><span>🛢️ نفت‌خیز</span><span>👑 VIP</span><span>🔒 گرفته‌شده</span>
+    </div>
+    <div class="country-grid" id="countryGrid"><div class="loading-wrap"><div class="spinner"></div>در حال بارگذاری...</div></div>
+  </section>
+
+  <!-- ============ MAIN APP ============ -->
+  <div id="mainApp" class="hidden">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">⚔️</div>
+        <div><b>ROYAL WAR</b><small>MAIN COMMAND</small></div>
+      </div>
+      <button class="bell" id="bellBtn"><span>🔔</span><span class="dot hidden" id="bellDot"></span></button>
+    </header>
+
+    <!-- ============ HOME ============ -->
+    <section class="screen active" id="screen-home">
+      <div class="screen-title">منوی اصلی</div>
+      <div class="screen-sub">وضعیت کشور شما</div>
+      <div id="homeContent"><div class="loading-wrap"><div class="spinner"></div></div></div>
+    </section>
+
+    <!-- ============ MARKET ============ -->
+    <section class="screen" id="screen-market">
+      <div class="screen-title">بازار</div>
+      <div class="screen-sub">تسلیحات، خرید سکه و فروش دارایی</div>
+
+      <div class="subtabs" data-group="market">
+        <button class="active" data-sub="weapons">🛒 بازار تسلیحات</button>
+        <button data-sub="coins">💎 خرید سکه</button>
+        <button data-sub="sell">📤 فروش به بازار</button>
+      </div>
+
+      <div class="subview active" id="market-weapons">
+        <div id="accordionRoot"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="subview" id="market-coins">
+        <div class="grid-2" id="coinPlanGrid" style="row-gap:9px;"><div class="loading-wrap"><div class="spinner"></div></div></div>
+        <div id="payBoxWrap" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="subview" id="market-sell">
+        <p class="screen-sub" style="margin-bottom:12px;">کارمزد فروش: ۱۰٪ از قیمت پایه</p>
+        <div id="sellList"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+    </section>
+
+    <!-- ============ LEADERBOARD ============ -->
+    <section class="screen" id="screen-leaderboard">
+      <div class="screen-title">لیدربرد</div>
+      <div class="screen-sub">رتبه‌بندی کشورهای جهان</div>
+
+      <div class="subtabs" data-group="rank">
+        <button class="active" data-sub="power">⚔️ قدرت نظامی</button>
+        <button data-sub="wealth">💰 ثروت</button>
+      </div>
+
+      <div class="subview active" id="rank-power">
+        <table class="rank"><thead><tr><th>#</th><th>کشور</th><th>قدرت</th></tr></thead><tbody id="rankPowerBody"></tbody></table>
+      </div>
+      <div class="subview" id="rank-wealth">
+        <table class="rank"><thead><tr><th>#</th><th>کشور</th><th>ثروت</th></tr></thead><tbody id="rankWealthBody"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ============ ATTACK ============ -->
+    <section class="screen" id="screen-attack">
+      <div class="screen-title">حمله</div>
+      <div class="screen-sub">عملیات نظامی و سایبری</div>
+
+      <div class="subtabs" data-group="attack">
+        <button class="active" data-sub="military">⚔️ حمله نظامی</button>
+        <button data-sub="cyber">💻 حمله سایبری</button>
+      </div>
+
+      <!-- military -->
+      <div class="subview active" id="attack-military">
+        <div id="militaryStatusLine" class="screen-sub"></div>
+        <div id="militaryTargets"></div>
+
+        <div id="militaryConfig" class="hidden">
+          <button class="btn sm" id="militaryBackBtn" style="margin-bottom:12px;">← بازگشت به لیست</button>
+          <h3 style="font-size:13px;margin:4px 0 8px;">نوع حمله</h3>
+          <div class="attack-type-grid" id="attackTypeGrid"></div>
+          <h3 style="font-size:13px;margin:16px 0 4px;">درصد قدرت اعزامی</h3>
+          <div class="slider-wrap">
+            <input type="range" id="powerSlider" min="1" max="100" value="50" step="1">
+            <div class="slider-val" id="powerSliderVal">۵۰٪</div>
+          </div>
+          <div class="card" id="attackPreview">
+            <h3 style="margin-bottom:8px;">📊 پیش‌نمایش نتیجه</h3>
+            <div id="attackPreviewBody" class="desc">در حال محاسبه...</div>
+            <button class="btn solid block" style="margin-top:12px;" id="confirmAttackBtn">تایید و حمله</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- cyber -->
+      <div class="subview" id="attack-cyber">
+        <div class="attack-type-grid" id="cyberOpGrid" style="margin-bottom:14px;">
+          <button class="active" data-op="asset">💰 هک دارایی</button>
+          <button data-op="military">⚔️ هک نظامی</button>
+          <button data-op="spy">🕵️ جاسوسی اطلاعات</button>
+        </div>
+        <div id="cyberStatusLine" class="screen-sub"></div>
+        <div id="cyberTargets"></div>
+      </div>
+    </section>
+
+    <!-- ============ DIPLOMACY ============ -->
+    <section class="screen" id="screen-diplomacy">
+      <div class="screen-title">دیپلماسی</div>
+      <div class="screen-sub">بیانیه، نفت، اتحاد، صادرات و شرکت‌ها</div>
+
+      <div class="subtabs" data-group="dip">
+        <button class="active" data-sub="statement">📜 بیانیه</button>
+        <button data-sub="oil">🛢️ نفت</button>
+        <button data-sub="alliance">🤝 اتحاد</button>
+        <button data-sub="export">🚢 صادرات</button>
+        <button data-sub="companies">🏭 شرکت‌ها</button>
+      </div>
+
+      <div class="subview active" id="dip-statement">
+        <div class="form-field">
+          <label>متن بیانیه رسمی</label>
+          <textarea id="statementText" maxlength="500" placeholder="بیانیه‌ی خود را بنویسید..."></textarea>
+          <div class="char-count"><span id="charCount">0</span>/500</div>
+        </div>
+        <button class="btn solid block" id="sendStatementBtn">ارسال برای تایید ادمین</button>
+        <div id="declarationHistory" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="subview" id="dip-oil">
+        <div id="oilContent"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="subview" id="dip-alliance">
+        <div id="allianceContent"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="subview" id="dip-export">
+        <div class="form-field"><label>کالا</label>
+          <select id="exportGood"></select>
+        </div>
+        <div class="form-field"><label>مقدار</label><input type="number" id="exportQty" min="1" placeholder="مثلاً ۱۰۰۰"></div>
+        <div class="form-field"><label>قیمت کل پیشنهادی</label><input type="number" id="exportPrice" min="1" placeholder="مثلاً ۴۲۰۰۰۰"></div>
+        <div class="form-field"><label>کشور خریدار</label>
+          <select id="exportCountry"></select>
+        </div>
+        <button class="btn solid block" id="sendExportBtn">ارسال پیشنهاد</button>
+        <div id="exportOffersLists" style="margin-top:18px;"></div>
+      </div>
+
+      <div class="subview" id="dip-companies">
+        <div id="companiesContent"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+    </section>
+
+    <!-- CART FAB -->
+    <button class="cart-fab hidden" id="cartFab">🛒 <span id="cartCount">0</span> قلم</button>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottomnav">
+      <button data-screen="market"><span class="ic">🛒</span>بازار</button>
+      <button data-screen="leaderboard"><span class="ic">🏆</span>لیدربرد</button>
+      <button data-screen="home" class="active"><span class="ic">🏠</span>منو</button>
+      <button data-screen="attack"><span class="ic">⚔️</span>حمله</button>
+      <button data-screen="diplomacy"><span class="ic">🌐</span>دیپلماسی</button>
+    </nav>
+
+    <!-- ITEM MODAL (shop) -->
+    <div class="overlay hidden" id="itemOverlay">
+      <div class="modal">
+        <div class="modal-head"><h3 id="modalItemName"></h3><button class="modal-close" id="modalCloseBtn">✕</button></div>
+        <div class="price-line">قیمت واحد: <b id="modalItemPrice"></b></div>
+        <div class="qty-grid">
+          <button class="qtybtn plus" data-amt="10000">+10000</button>
+          <button class="qtybtn plus" data-amt="1000">+1000</button>
+          <button class="qtybtn plus" data-amt="100">+100</button>
+        </div>
+        <div class="qty-grid small">
+          <button class="qtybtn plus" data-amt="10">+10</button>
+          <button class="qtybtn plus" data-amt="1">+1</button>
+        </div>
+        <div class="qty-grid" style="margin-top:10px;">
+          <button class="qtybtn minus" data-amt="-10000">-10000</button>
+          <button class="qtybtn minus" data-amt="-1000">-1000</button>
+          <button class="qtybtn minus" data-amt="-100">-100</button>
+        </div>
+        <div class="qty-grid small">
+          <button class="qtybtn minus" data-amt="-10">-10</button>
+          <button class="qtybtn minus" data-amt="-1">-1</button>
+        </div>
+        <div class="custom-qty">
+          <span style="font-size:11.5px;color:var(--text-dim);">تعداد دلخواه:</span>
+          <input type="number" id="modalCustomQty" min="0" placeholder="0">
+        </div>
+        <div class="modal-summary">
+          <div class="row"><span>📦 در سبد شما</span><b id="modalInCart">0 عدد</b></div>
+          <div class="row total"><span>💰 جمع این آیتم</span><b id="modalTotal">0</b></div>
+        </div>
+        <button class="btn solid block" id="modalDoneBtn">تمام</button>
+      </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div class="drawer hidden" id="cartDrawer">
+      <div class="drawer-panel">
+        <div class="modal-head"><h3>🛒 سبد خرید</h3><button class="modal-close" id="cartCloseBtn">✕</button></div>
+        <div id="cartLines"></div>
+        <div class="modal-summary">
+          <div class="row total"><span>جمع کل</span><b id="cartGrandTotal">0</b></div>
+        </div>
+        <button class="btn solid block" id="checkoutBtn">نهایی کردن خرید</button>
+      </div>
+    </div>
+
+    <!-- GENERIC CENTER MODAL (confirm / result) -->
+    <div class="overlay center hidden" id="centerOverlay">
+      <div class="center-modal" id="centerModalBody"></div>
+    </div>
+
+    <!-- NOTIFICATIONS OVERLAY -->
+    <div class="overlay hidden" id="notifOverlay">
+      <div class="modal" style="max-height:78vh;overflow-y:auto;">
+        <div class="modal-head"><h3>🔔 اعلان‌ها</h3><button class="modal-close" id="notifCloseBtn">✕</button></div>
+        <div id="notifList"></div>
+        <button class="btn block" style="margin-top:14px;" id="markAllReadBtn">علامت‌گذاری همه به‌عنوان خوانده‌شده</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
