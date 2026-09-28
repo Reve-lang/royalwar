@@ -49,9 +49,31 @@ let currentCyberOp = "asset";
 
 window.addEventListener("DOMContentLoaded", boot);
 
+async function diagnose(){
+  try{
+    await fetch(`${API_BASE}?action=session`, {mode:"no-cors"});
+    return "سرور در دسترسه ولی مرورگر به خاطر CORS جلوش رو گرفته (هدر Access-Control-Allow-Origin نمیاد)";
+  }catch(e){
+    return "به سرور وصل نمیشه (SSL / دامنه / فایروال هاست)";
+  }
+}
+
 async function boot(){
-  const res = await fetch(`${API_BASE}?action=session`, {credentials:"include"});
-  const data = await res.json();
+  let data;
+  try{
+    const res = await fetch(`${API_BASE}?action=session`, {credentials:"include"});
+    const text = await res.text();
+    try{ data = JSON.parse(text); }
+    catch(_){
+      showScreenGroup("login");
+      document.getElementById("loginError").textContent = "پاسخ سرور JSON نبود: " + text.slice(0,120);
+      return;
+    }
+  }catch(e){
+    showScreenGroup("login");
+    document.getElementById("loginError").textContent = await diagnose();
+    return;
+  }
   if (!data.ok || !data.data || !data.data.logged_in){
     showScreenGroup("login");
     return;
@@ -105,10 +127,17 @@ async function doLogin(){
   }
   const btn = document.getElementById("loginBtn");
   btn.disabled = true; btn.textContent = "در حال ورود...";
-  const res = await fetch(`${API_BASE}?action=login`, {
-    method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({token}), credentials:"include"
-  });
-  const data = await res.json();
+  let data;
+  try{
+    const res = await fetch(`${API_BASE}?action=login`, {
+      method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({token}), credentials:"include"
+    });
+    data = await res.json();
+  }catch(e){
+    btn.disabled = false; btn.textContent = "ورود";
+    errBox.textContent = await diagnose();
+    return;
+  }
   btn.disabled = false; btn.textContent = "ورود";
   if (!data.ok){
     input.classList.add("shake"); setTimeout(()=>input.classList.remove("shake"), 400);
