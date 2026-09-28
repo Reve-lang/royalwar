@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تست ارتباط</title>
+<style>body{font-family:system-ui,sans-serif;background:#10141a;color:#ece7da;padding:16px;line-height:1.8}
+pre{white-space:pre-wrap;word-break:break-all;background:#1e2530;padding:10px;border-radius:6px;font-size:12px}
+button{padding:12px 18px;font-size:15px;background:#c9a227;border:0;border-radius:6px}
+.ok{color:#8fbf9a}.bad{color:#e57373}</style></head>
+<body>
+<h3>تست ارتباط با بک‌اند</h3>
+<button id="go">شروع تست</button>
+<div id="out"></div>
+<script>
+const URL_ = "https://magnificent-magenta-duck.190-2-143-208.cpanel.site/bot/back.php?action=session";
+const out = document.getElementById("out");
+function add(cls, t){ out.insertAdjacentHTML("beforeend", `<pre class="${cls}">${t.replace(/</g,"&lt;")}</pre>`); }
+document.getElementById("go").onclick = async () => {
+  out.innerHTML = "";
+  // 1) بدون CORS: فقط ببینیم ریدایرکت هست یا نه
+  try{
+    const r = await fetch(URL_, {mode:"no-cors", redirect:"manual"});
+    add(r.type==="opaqueredirect"?"bad":"ok", "۱) اتصال: type=" + r.type + (r.type==="opaqueredirect" ? "  ← آدرس ریدایرکت می‌شه (مشکل!)" : "  ← ریدایرکت نداره"));
+  }catch(e){ add("bad","۱) اتصال ناموفق: "+e.message); }
+  // 2) CORS بدون کوکی
+  try{
+    const r = await fetch(URL_, {mode:"cors"});
+    const t = await r.text();
+    add("ok","۲) CORS بدون کوکی: موفق، status="+r.status+"\n"+t.slice(0,200));
+  }catch(e){ add("bad","۲) CORS بدون کوکی: رد شد ← هدر Access-Control-Allow-Origin اصلاً نمیاد"); }
+  // 3) CORS با کوکی
+  try{
+    const r = await fetch(URL_, {mode:"cors", credentials:"include"});
+    const t = await r.text();
+    add("ok","۳) CORS با کوکی: موفق، status="+r.status+"\n"+t.slice(0,200));
+  }catch(e){ add("bad","۳) CORS با کوکی: رد شد ← Access-Control-Allow-Credentials یا origin مشکل داره"); }
+};
+</script></body></html>
